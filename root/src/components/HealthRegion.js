@@ -1,3 +1,6 @@
 export default function HealthRegion(props) {
-  return null;
+  const { path } = props;
+
+  //each path defines the shape of a region in the map
+  return <path d={props.pathData} />;
 }
