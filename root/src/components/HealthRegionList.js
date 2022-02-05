@@ -1,16 +1,28 @@
 import * as d3 from "d3";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function HealthRegionList(props) {
+  // keep track of data loading state
+  const [loading, setLoading] = useState(true);
   // step 1: fetch geojson data of map
   let mapData = [];
-  d3.json("../data/map_data.json")
-    .then((data) => {
-      mapData = data;
-      console.log(data);
-    })
-    .catch((err) => {
-      console.log("error occured", err);
-    });
-  return <svg className="map-canvas">{JSON.stringify(mapData)}</svg>;
+  // only fetch map data once
+  useEffect(() => {
+    d3.json("https://xihai01.github.io/friendly-journey/map_data.geojson")
+      .then((data) => {
+        mapData = data;
+        setLoading(false);
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log("error occured", err);
+      });
+  }, []);
+
+  // render map only when map data is fully loaded
+  if (!loading) {
+    return <h1>Loaded</h1>;
+  } else {
+    return <h1>Loading...</h1>;
+  }
 }
