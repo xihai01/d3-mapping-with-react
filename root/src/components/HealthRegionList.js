@@ -2,6 +2,7 @@ import * as d3 from "d3";
 import { useEffect, useState } from "react";
 import { setMapProjection } from "../helpers/setMapProjection";
 import HealthRegion from "./HealthRegion";
+import "./HealthRegionList.css";
 
 export default function HealthRegionList(props) {
   // store loaded map data in a state
@@ -22,18 +23,32 @@ export default function HealthRegionList(props) {
       .catch((err) => {
         console.log("error occured", err);
       });
+
+    /// tooltip
+    d3.select("body")
+      .append("div")
+      .attr("id", "tooltip")
+      .attr("style", "position: absolute; opacity: 0");
+    ///
   }, []);
 
   // render map only when map data is fully loaded
   if (!mapData.loading) {
     // step 2: render the regions
     // compute a path function based on correct projections that we will use later
-    const path = d3.geoPath().projection(setMapProjection(mapData));
+    const path = d3.geoPath().projection(setMapProjection(mapData.data));
     // for each geoJSON coordinate, compute and pass in the equivalent svg path
     const healthRegions = mapData.data.features.map((data) => {
-      return <HealthRegion key={data.properties.FID} path={path(data)} />;
+      const region_name = data.properties["NAME_ENG"];
+      return (
+        <HealthRegion
+          key={data.properties.FID}
+          path={path(data)}
+          tooltipData={region_name}
+        />
+      );
     });
-    console.log(healthRegions);
+    console.log(mapData.data.features);
 
     return (
       <>

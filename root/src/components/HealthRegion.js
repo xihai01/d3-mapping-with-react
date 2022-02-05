@@ -1,6 +1,26 @@
+import * as d3 from "d3";
+import {
+  handleMouseOver,
+  handleMouseOut,
+  handleMouseMove,
+} from "../helpers/handleTooltip";
+import "./HealthRegion.css";
+
 export default function HealthRegion(props) {
-  const { path } = props;
+  const { path, tooltipData } = props;
 
   //each path defines the shape of a region in the map
-  return <path d={props.pathData} />;
+  return (
+    <path
+      className="path"
+      d={path}
+      onMouseOver={() => {
+        handleMouseOver(tooltipData);
+      }}
+      onMouseOut={handleMouseOut}
+      onMouseMove={(event) => {
+        handleMouseMove(event);
+      }}
+    />
+  );
 }
