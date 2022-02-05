@@ -1,18 +1,22 @@
 import * as d3 from "d3";
 import { useEffect, useState } from "react";
 import { setMapProjection } from "../helpers/setMapProjection";
+import HealthRegion from "./HealthRegion";
 
 export default function HealthRegionList(props) {
-  // keep track of data loading state
-  const [loading, setLoading] = useState(true);
+  // store loaded map data in a state
+  const [mapData, setMapData] = useState({
+    data: {},
+    loading: true,
+  });
   // step 1: fetch geojson data of map
-  let mapData = [];
   // only fetch map data once
   useEffect(() => {
     d3.json("https://xihai01.github.io/friendly-journey/map_data.geojson")
       .then((data) => {
-        mapData = data;
-        setLoading(false);
+        setMapData((prevState) => {
+          return { ...prevState, data: data, loading: false };
+        });
         console.log(data);
       })
       .catch((err) => {
@@ -21,11 +25,13 @@ export default function HealthRegionList(props) {
   }, []);
 
   // render map only when map data is fully loaded
-  if (!loading) {
+  if (!mapData.loading) {
     // step 2: render the regions
     // compute a path function based on correct projections that we will use later
     const path = d3.geoPath().projection(setMapProjection(mapData));
-    //
+    // for each geoJSON coordinate, compute and pass in the equivalent svg path
+    console.log(mapData);
+
     return <h1>Loaded</h1>;
   } else {
     return <h1>Loading...</h1>;
