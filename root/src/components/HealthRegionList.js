@@ -1,36 +1,12 @@
 import * as d3 from "d3";
-import { useEffect, useState } from "react";
 import { setMapProjection } from "../helpers/setMapProjection";
+import { useMapTools } from "../hooks/useMapTools";
 import HealthRegion from "./HealthRegion";
 import "./HealthRegionList.css";
 
 export default function HealthRegionList(props) {
-  // store loaded map data in a state
-  const [mapData, setMapData] = useState({
-    data: {},
-    loading: true,
-  });
-  // step 1: fetch geojson data of map
-  // only fetch map data once
-  useEffect(() => {
-    d3.json("https://xihai01.github.io/friendly-journey/map_data.geojson")
-      .then((data) => {
-        setMapData((prevState) => {
-          return { ...prevState, data: data, loading: false };
-        });
-        console.log(data);
-      })
-      .catch((err) => {
-        console.log("error occured", err);
-      });
-
-    /// tooltip
-    d3.select("body")
-      .append("div")
-      .attr("id", "tooltip")
-      .attr("style", "position: absolute; opacity: 0");
-    ///
-  }, []);
+  // step 1: load geoJSON and create tooltip
+  const {mapData} = useMapTools();
 
   // render map only when map data is fully loaded
   if (!mapData.loading) {
