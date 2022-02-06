@@ -24,7 +24,6 @@ export default function HealthRegionList(props) {
         />
       );
     });
-    console.log(mapData.data.features);
 
     return (
       <>

@@ -7,7 +7,7 @@ export const useMapTools = function () {
     data: {},
     loading: true,
   });
-  
+
   // only fetch map data once and create a tooltip
   useEffect(() => {
     d3.json("https://xihai01.github.io/friendly-journey/map_data.geojson")
@@ -15,7 +15,6 @@ export const useMapTools = function () {
         setMapData((prevState) => {
           return { ...prevState, data: data, loading: false };
         });
-        console.log(data);
       })
       .catch((err) => {
         console.log("error occurred with loading map", err);
